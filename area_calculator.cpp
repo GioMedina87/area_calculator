@@ -6,90 +6,71 @@
 // ------------------------------------------------------------------------------
 
 #include <iostream>
-#include <cmath> // Include cmath for mathematical operations
+#include <cmath> // Not required for this program but good if using math functions like pow()
 
 using namespace std;
 
-// Abstract base class Shape
+// Abstract base class for all shapes
 class Shape {
 public:
-    // Virtual function to get the area (to be overridden by derived classes)
+    // Pure virtual function to force all derived classes to implement their own get_area
     virtual double get_area() const = 0;
 };
 
-// Derived class Circle
+// Circle class that inherits from Shape
 class Circle : public Shape {
 private:
     double radius;
 
 public:
-    // Constructor
+    // Constructor to initialize radius
     Circle(double r) : radius(r) {}
 
     // Getter and setter for radius
-    double get_radius() const {
-        return radius;
-    }
+    double get_radius() const { return radius; }
+    void set_radius(double r) { radius = r; }
 
-    void set_radius(double r) {
-        radius = r;
-    }
-
-    // Override get_area function
+    // Override get_area() for circle: π * r^2
     double get_area() const override {
         return radius * radius * 3.14;
     }
 };
 
-// Derived class Square
+// Square class that inherits from Shape
 class Square : public Shape {
 private:
     double width;
 
 public:
-    // Constructor
     Square(double w) : width(w) {}
 
-    // Getter and setter for width
-    double get_width() const {
-        return width;
-    }
+    double get_width() const { return width; }
+    void set_width(double w) { width = w; }
 
-    void set_width(double w) {
-        width = w;
-    }
-
-    // Override get_area function
+    // Override get_area() for square: width^2
     double get_area() const override {
         return width * width;
     }
 };
 
-// Derived class Rectangle
+// Rectangle class that inherits from Square and adds height
 class Rectangle : public Square {
 private:
     double height;
 
 public:
-    // Constructor
     Rectangle(double w, double h) : Square(w), height(h) {}
 
-    // Getter and setter for height
-    double get_height() const {
-        return height;
-    }
+    double get_height() const { return height; }
+    void set_height(double h) { height = h; }
 
-    void set_height(double h) {
-        height = h;
-    }
-
-    // Override get_area function
+    // Override get_area() for rectangle: width * height
     double get_area() const override {
         return get_width() * height;
     }
 };
 
-// Function to display the area of a shape
+// Helper function to display the area
 void display_area(const Shape& shape) {
     cout << "Area: " << shape.get_area() << endl;
 }
@@ -98,55 +79,47 @@ int main() {
     cout << "The Area Calculator\n";
 
     char continueOption;
+
+    // Main loop: runs at least once and repeats if user chooses 'y' to continue
     do {
-        // Prompt user to choose a shape
-        cout << "\nCircle, square, or rectangle? (c/s/r): ";
         char shapeType;
-        cin >> shapeType;
+        bool validShape = false;
 
-        // Process the chosen shape
-        if (shapeType == 'c') {
-            // Circle
-            double radius;
-            cout << "Enter radius: ";
-            cin >> radius;
+        // Inner loop ensures the user enters a valid shape option
+        while (!validShape) {
+            cout << "\nCircle, square, or rectangle? (c/s/r): ";
+            cin >> shapeType;
 
-            // Create Circle object
-            Circle circle(radius);
-
-            // Display area
-            display_area(circle);
-        } else if (shapeType == 's') {
-            // Square
-            double width;
-            cout << "Enter width: ";
-            cin >> width;
-
-            // Create Square object
-            Square square(width);
-
-            // Display area
-            display_area(square);
-        } else if (shapeType == 'r') {
-            // Rectangle
-            double width, height;
-            cout << "Enter width: ";
-            cin >> width;
-            cout << "Enter height: ";
-            cin >> height;
-
-            // Create Rectangle object
-            Rectangle rectangle(width, height);
-
-            // Display area
-            display_area(rectangle);
-        } else {
-            // Invalid input
-            cout << "Invalid choice! Try again.\n";
-            continue;
+            if (shapeType == 'c') {
+                double radius;
+                cout << "Enter radius: ";
+                cin >> radius;
+                Circle circle(radius);
+                display_area(circle);
+                validShape = true;
+            } else if (shapeType == 's') {
+                double width;
+                cout << "Enter width: ";
+                cin >> width;
+                Square square(width);
+                display_area(square);
+                validShape = true;
+            } else if (shapeType == 'r') {
+                double width, height;
+                cout << "Enter width: ";
+                cin >> width;
+                cout << "Enter height: ";
+                cin >> height;
+                Rectangle rectangle(width, height);
+                display_area(rectangle);
+                validShape = true;
+            } else {
+                // If invalid option is entered, prompt again
+                cout << "Invalid choice! Please enter 'c', 's', or 'r'.\n";
+            }
         }
 
-        // Prompt user to continue
+        // Ask user if they want to calculate another shape
         cout << "Continue? (y/n): ";
         cin >> continueOption;
 
